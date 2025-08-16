@@ -115,8 +115,7 @@ crosslingual_bias_audiodeepfake/
 │   ├── evaluate.py            # Bias analysis
 │   └── visualize.py           # Generate paper figures
 ├── scripts/
-│   ├── statistical_tests.py   # Mann-Whitney U, CLES
-│   └── prepare_data.py        # Data preprocessing
+│   └── statistical_tests.py   # Mann-Whitney U, CLES
 ├── configs/                    # Configuration files
 ├── requirements.txt
 └── README.md
@@ -184,31 +183,20 @@ python main.py \
 | Swahili | sw | 0.48 | 0.41 | ❌ Poor |
 | Ukrainian | uk | 0.12 | 0.27 | ❌ Very Poor |
 
-### Statistical Analysis
-
-```bash
-# Run pairwise Mann-Whitney U tests
-python scripts/statistical_tests.py \
-    --scores_file results/cm_scores.csv \
-    --output results/statistical_analysis.csv
-
-# Calculate Common Language Effect Size (CLES)
-python scripts/cles_analysis.py \
-    --scores_file results/cm_scores.csv \
-    --output results/cles_matrix.csv
-```
-
-### Visualization
+### Statistical Analysis and plotting resources
 
 ```bash
 # Generate paper figures
-python evaluate_mlaad/visualize.py \
-    --scores_file results/cm_scores.csv \
-    --stats_file results/statistical_analysis.csv \
-    --output_dir figures/
+python ./scripts/statistical_tests.py \
+    --csv_path <path to results file> \
+    --output_dir <desired output folder>
 ```
 
-This creates:
+The input CSV file is the one with the following columns:
+
+original_file|language|is_original_language|duration|training_data|model_name|architecture|transcript|language_folder|model_folder|meta_csv_path|absolute_audio_path|score|gender
+
+The script writes the following plots to disk:
 - Figure 2: Score distributions (violin plots)
 - Figure 3: P-value and CLES heatmap
 
@@ -224,10 +212,7 @@ This creates:
 ./scripts/evaluate_crosslingual.sh
 
 # 3. Statistical analysis
-./scripts/run_statistical_tests.sh
-
-# 4. Generate all figures
-./scripts/generate_figures.sh
+./scripts/statistical_tests.py
 ```
 
 ### Expected Outcomes
@@ -257,10 +242,6 @@ evaluation:
   languages: ["fi", "de", "ru", "sw", "uk", "en", "fr", "nl", "hu", "ro"]
   samples_per_language: 1000
   
-statistical_tests:
-  test_type: "mann_whitney_u"
-  correction: "bonferroni"
-  significance_level: 0.05
 ```
 
 ## 📝 Citation
@@ -290,7 +271,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
 - CAPES – Finance Code 001
 - FAPESP Horus project (Grant #2023/12865-8)  
 - FAPESP BI0S project (Grant #2020/09838-0)
-- CPQDE Company
+- CPQD Company
 - Authors of MLAAD dataset (Müller et al., 2024)
 - Authors of Automatic speaker verification spoofing and deepfake detection using wav2vec 2.0 and data augmentation (Tak et al., 2022)
 - ASVspoof challenge organizers
